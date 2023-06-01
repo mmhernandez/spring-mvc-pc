@@ -17,6 +17,7 @@
 	</nav>
 	
 	<main class="mx-auto w-50">
+		<p class="fs-1 text-warning">Safe Travels!</p>
 		<h1>Expense List</h1>
 		<table class="table mt-5">
 			<thead class="bg-light">
