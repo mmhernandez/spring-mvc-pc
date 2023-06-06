@@ -33,7 +33,7 @@
 				<c:forEach var="student" items="${ dorm.students }">
 					<tr>
 						<td><c:out value="${ student.firstName } ${ student.lastName }" /></td>
-						<td>
+						<td class="d-flex gap-2 justify-content-center">
 							<!-- Reassign Button trigger modal -->
 							<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#reassignModal${ student.id }">
 								Reassign
@@ -76,6 +76,10 @@
 							        </div>
 						        </div>
 					        </div>
+					        <form action="/students/${ student.id }" method="post">
+					        	<input type="hidden" name="_method" value="delete" />
+					        	<input type="submit" class="btn btn-outline-danger" value="Remove" />
+					        </form>
 						</td>
 					</tr>
 				</c:forEach>
