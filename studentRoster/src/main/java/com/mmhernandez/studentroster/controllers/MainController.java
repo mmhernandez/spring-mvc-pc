@@ -1,5 +1,8 @@
 package com.mmhernandez.studentroster.controllers;
 
+import java.util.HashMap;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -39,6 +42,16 @@ public class MainController {
 	public String dashboard(
 			Model model) {
 		model.addAttribute("dorms", dormService.getAll());
+		
+		//get student count for each dorm
+		List<Dorm> dormList = dormService.getAll();
+		HashMap<Long, Long> studentCountByDorm = new HashMap<Long, Long>();
+		for(int i=0; i<dormList.size();i++) {
+			Long dormId = dormList.get(i).getId();
+			Long studentCount = studentService.countStudentByDorm(dormList.get(i));
+			studentCountByDorm.put(dormId, studentCount);
+		}
+		model.addAttribute("students", studentCountByDorm);
 		return "dashboard.jsp";
 	}
 	
@@ -102,9 +115,7 @@ public class MainController {
 		model.addAttribute("dorms", dormService.getAll());
 		model.addAttribute("dorm", dormService.getById(currentDormId));
 		
-		System.out.println(student.getId());
 		studentService.updateStudent(student);
-		
 		return "redirect:/dorms/" + currentDormId;
 	}
 	

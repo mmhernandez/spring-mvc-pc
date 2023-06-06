@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.mmhernandez.studentroster.models.Dorm;
 import com.mmhernandez.studentroster.models.Student;
 import com.mmhernandez.studentroster.repositories.StudentRepository;
 
@@ -38,9 +39,9 @@ public class StudentService {
 		studentRepository.deleteById(id);
 	}
 	
-//	delete by student
-	public void deleteStudentObj(Student student) {
-		studentRepository.delete(student);
+//	count students by dorm
+	public Long countStudentByDorm(Dorm dorm) {
+		return studentRepository.countByDorm(dorm);
 	}
 	
 }

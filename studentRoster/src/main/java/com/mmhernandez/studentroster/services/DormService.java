@@ -33,4 +33,9 @@ public class DormService {
 		}
 		return null;
 	}
+	
+//	get dorm count
+	public Long count() {
+		return dormRepository.count();
+	}
 }

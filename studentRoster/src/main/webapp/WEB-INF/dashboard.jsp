@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <!DOCTYPE html>
@@ -23,6 +22,7 @@
 			<thead class="bg-light">
 				<tr>
 					<th>Dorm</th>
+					<th># Students</th>
 					<th>Action</th>
 				</tr>
 			</thead>
@@ -30,6 +30,7 @@
 				<c:forEach var="dorm" items="${ dorms }">
 					<tr>
 						<td><c:out value="${ dorm.name }" /></td>
+						<td><c:out value="${ students.get(dorm.id) }" /></td>
 						<td>
 							<a href="/dorms/${ dorm.id }">See Students</a>
 						</td>
