@@ -95,16 +95,15 @@ public class MainController {
 	
 	@PutMapping("/students")
 	public String updateStudentDorm(
-			@RequestParam("currentDorm") Long dormId,
 			@ModelAttribute("student") Student student,
-			BindingResult result,
+			@RequestParam("currentDorm") Long currentDormId,
 			Model model) {
-		if(result.hasErrors()) {
-			model.addAttribute("dorms", dormService.getAll());
-			model.addAttribute("dorm", dormService.getById(dormId));
-			return "dormStudents.jsp"; 
-		}
+		model.addAttribute("dorms", dormService.getAll());
+		model.addAttribute("dorm", dormService.getById(currentDormId));
+		
+		System.out.println(student.getId());
 		studentService.updateStudent(student);
-		return "redirect:/dorms/" + dormId;
+		
+		return "redirect:/dorms/" + currentDormId;
 	}
 }

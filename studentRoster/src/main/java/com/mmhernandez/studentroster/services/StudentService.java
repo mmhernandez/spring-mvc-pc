@@ -1,5 +1,7 @@
 package com.mmhernandez.studentroster.services;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,9 +19,18 @@ public class StudentService {
 		return studentRepository.save(student);
 	}
 	
-//	update by id
+//	update
 	public Student updateStudent(Student student) {
 		return studentRepository.save(student);
+	}
+	
+//	get one by id
+	public Student getById(Long id) {
+		Optional<Student> optStudent = studentRepository.findById(id);
+		if(optStudent.isPresent()) {
+			return optStudent.get();
+		}
+		return null;
 	}
 	
 }

@@ -2,7 +2,6 @@
     pageEncoding="ISO-8859-1"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
-<%@ page isErrorPage="true" %>
 
 <!DOCTYPE html>
 <html>
@@ -36,21 +35,27 @@
 						<td><c:out value="${ student.firstName } ${ student.lastName }" /></td>
 						<td>
 							<!-- Reassign Button trigger modal -->
-							<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#reassignModal${ student.id }">Reassign</button>
+							<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#reassignModal${ student.id }">
+								Reassign
+							</button>
 							<!-- Modal for Reassign Button -->
 							<div class="modal fade" id="reassignModal${ student.id }" tabindex="-1" aria-labelledby="#reassignModalLabel" aria-hidden="true">
 								<div class="modal-dialog">
 									<div class="modal-content">
 										<div class="modal-header">
-								        <h1 class="modal-title fs-5" id="exampleModalLabel">Reassign ${ student.firstName } ${ student.lastName }</h1>
+								        <h1 class="modal-title fs-5" id="exampleModalLabel">Reassign Dorm</h1>
 								        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 								        </div>
 							        	<form:form action="/students" method="post" modelAttribute="student">
 							        		<input type="hidden" name="_method" value="put" />
 									        <div class="modal-body text-start">
 								        		<div class="mb-3">
-								        			<form:input type="hidden" path="firstName" value="${ student.firstName }" />
-								        			<form:input type="hidden" path="lastName" value="${ student.lastName }" />
+													<p>Name: <span class="fw-bold"><c:out value="${ student.firstName } ${ student.lastName }" /></span></p>
+													<form:input type="hidden" path="firstName" value="${ student.firstName }" />
+													<form:input type="hidden" path="lastName" value="${ student.lastName }" />
+													<form:input type="hidden" path="id" value="${ student.id }" />
+												</div>
+								        		<div class="mb-3">
 													<p>Current Dorm: <span class="fw-bold"><c:out value="${ student.dorm.name }" /></span></p>
 													<input type="hidden" name="currentDorm" value="${ student.dorm.id }" />
 												</div>
@@ -76,7 +81,6 @@
 				</c:forEach>
 			</tbody>
 		</table>
-		<form:errors path="dorm" class="text-danger"/>
 	</main>
 
 </body>
