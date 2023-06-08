@@ -37,7 +37,7 @@
 				</tr>
 			</table>
 			<div class="d-flex justify-content-center border border-light py-2">
-				<input type="submit" class="btn btn-primary" value="login" />
+				<input type="submit" class="btn btn-primary" value="Login" />
 			</div>
 		</form:form>
 	</main>

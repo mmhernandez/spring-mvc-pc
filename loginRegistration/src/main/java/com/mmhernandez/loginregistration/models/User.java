@@ -18,7 +18,9 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Past;
 import jakarta.validation.constraints.Size;
 
 @Entity
@@ -37,7 +39,7 @@ public class User {
 	@Size(min=2, max=45, message="Last name must be between 2 and 45 characters")
 	private String lastName;
 	
-	@NotBlank(message="Birthday requried")
+	@Past(message="Invalid birthday")
 	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private Date birthday;
 	
@@ -53,8 +55,8 @@ public class User {
 	@Email(message="Invalid email")
 	private String email;
 	
-	@NotBlank(message="Password required")
-	@Size(min=8, max=28, message="Password must be between 8 and 28 characters")
+	@NotEmpty(message="Password required")
+	@Size(min=8, max=128, message="Password must be between 8 and 128 characters")
 	private String password;
 	
 	@Transient

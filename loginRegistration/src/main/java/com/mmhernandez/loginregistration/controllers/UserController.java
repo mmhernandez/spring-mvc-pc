@@ -2,6 +2,7 @@ package com.mmhernandez.loginregistration.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -23,10 +24,14 @@ public class UserController {
 	
 	@GetMapping("/")
 	public String home(
-			HttpSession session) {
-		//session check for userID - if not logged in, redirect to login page
-		System.out.println(session.getAttribute("id"));
-		return "home.jsp";
+			HttpSession session,
+			Model model) {
+		if(session.getAttribute("id") != null) {
+			Long userId = (Long) session.getAttribute("id");
+			model.addAttribute("user", userService.getById(userId));
+			return "home.jsp";
+		}
+		return "redirect:/login";
 	}
 	
 	@GetMapping("/register")
@@ -54,6 +59,28 @@ public class UserController {
 			@ModelAttribute("newLogin") LoginUser newLogin) {
 		return "login.jsp";
 	}
+
+	@PostMapping("/login")
+	public String loginUser(
+			@Valid @ModelAttribute("newLogin") LoginUser newLogin,
+			BindingResult result,
+			HttpSession session) {
+		User user = userService.login(newLogin, result);
+		if(result.hasErrors()) {
+			return "login.jsp";
+		}
+		
+		session.setAttribute("id", user.getId());
+		return "redirect:/";
+	}
 	
+	@GetMapping("/logout") 
+	public String logout(
+			HttpSession session) {
+		if(session.getAttribute("id") != null) {			
+			session.removeAttribute("id");
+		}
+		return "redirect:/";
+	}
 	
 }
