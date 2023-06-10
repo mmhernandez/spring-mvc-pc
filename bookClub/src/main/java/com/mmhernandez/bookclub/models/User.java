@@ -1,14 +1,18 @@
 package com.mmhernandez.bookclub.models;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
@@ -47,6 +51,9 @@ public class User {
 	
 	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private Date updatedAt;
+	
+	@OneToMany(mappedBy="user", cascade=CascadeType.ALL, fetch=FetchType.LAZY)
+	private List<Book> books;
 	
 	
 //	CONSTRUCTORS
@@ -102,9 +109,15 @@ public class User {
 	public void setUpdatedAt(Date updatedAt) {
 		this.updatedAt = updatedAt;
 	}
+	public List<Book> getBooks() {
+		return books;
+	}
+	public void setBooks(List<Book> books) {
+		this.books = books;
+	}
 	
 	
-//	OTHER METHODS
+	//	OTHER METHODS
 	@PrePersist
 	public void onCreate() {
 		this.createdAt = new Date();
