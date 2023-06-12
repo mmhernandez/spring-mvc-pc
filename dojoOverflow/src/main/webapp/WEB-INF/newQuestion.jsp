@@ -24,9 +24,8 @@
 			<form:errors path="text" class="text-danger" />
 		</div>
 		<div class="mb-3">
-			<form:label path="tags" class="form-label">Tags <span class="fst-italic text-secondary">(separate tags with a comma)</span></form:label>
-			<form:input type="text" path="tags" class="form-control" />
-			<form:errors path="tags" class="text-danger" />
+			<label for="tagList" class="form-label">Tags <span class="fst-italic text-secondary">(separate tags with a comma)</span></label>
+			<input type="text" name="tagList" class="form-control" />
 			<p class="text-danger">${ tagError }</p>
 		</div>
 		<input type="submit" value="Save" class="btn btn-dark"/>

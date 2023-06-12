@@ -48,19 +48,27 @@ public class MainController {
 	public String addQuestion(
 			@Valid @ModelAttribute("question") Question question,
 			BindingResult result,
-			@RequestParam("tags") String tags,
+			@RequestParam("tagList") String tags,
 			RedirectAttributes redirectAttributes) {
+		
+		System.out.println("I'm in the addQuestion method");
+		
 		//check normal question validation
 		if(result.hasErrors()) {
 			return "newQuestion.jsp";
 		}
+		
+		System.out.println("I've passed initial validations");
+		
 		//add input tags to db appropriately		
 		List<Tag> tagList = evaluateTags(tags);
+		System.out.println("I've set the tagList list variable");
+		System.out.println(tagList);
 		
 		//check tagsList length
-		if(tagList == null || tagList.size()>3) {
-//			redirectAttributes.addFlashAttribute("tagError", "Must include between 1 and 3 tags");
-			result.rejectValue("tags","","Must include between 1 and 3 tags");
+		if(tagList == null) {
+			redirectAttributes.addFlashAttribute("tagError", "Must include between 1 and 3 tags");
+			result.rejectValue("tagList","","Must include between 1 and 3 tags");
 			return "newQuestion.jsp";
 		}
 			
@@ -71,12 +79,14 @@ public class MainController {
 	}
 	
 	private List<Tag> evaluateTags(String tags) {
-		if(tags.length()> 0 || tags.length()<4) {
+		if(tags.length()> 0 && tags.length()<4) {
+			System.out.println("I'm in the evaluateTags method");
 			//create empty arrayList
 			ArrayList<Tag> tagsArrayList = new ArrayList<Tag>();
 			
 			//create string array of tag subjects
 			String[] tagsList = tags.split(",");
+			System.out.println(tagsList);
 			
 			//loop through tagsList array
 			for(String eachTag : tagsList) {
