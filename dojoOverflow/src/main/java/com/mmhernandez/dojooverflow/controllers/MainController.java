@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.mmhernandez.dojooverflow.models.Answer;
 import com.mmhernandez.dojooverflow.models.Question;
 import com.mmhernandez.dojooverflow.models.Tag;
+import com.mmhernandez.dojooverflow.services.AnswerService;
 import com.mmhernandez.dojooverflow.services.QuestionService;
 import com.mmhernandez.dojooverflow.services.TagService;
 
@@ -28,6 +30,9 @@ public class MainController {
 	
 	@Autowired
 	TagService tagService;
+	
+	@Autowired
+	AnswerService answerService;
 	
 	
 	@GetMapping("/")
@@ -46,7 +51,8 @@ public class MainController {
 	@GetMapping("/questions/{id}")
 	public String viewQuestion(
 			Model model,
-			@PathVariable("id") Long id) {
+			@PathVariable("id") Long id,
+			@ModelAttribute("answer") Answer answer) {
 		model.addAttribute("question", questionService.getById(id));
 		return "question.jsp";
 	}
@@ -76,6 +82,23 @@ public class MainController {
 		questionService.create(question);
 		return "redirect:/";
 	}
+	
+	@PostMapping("/answers/add")
+	public String addAnswer(
+			@RequestParam("questionId") Long questionId,
+			@Valid @ModelAttribute("answer") Answer answer,
+			BindingResult result,
+			Model model) {
+		if(result.hasErrors()) {
+			model.addAttribute("question", questionService.getById(questionId));
+			return "question.jsp";
+		}
+		Question thisQ = questionService.getById(questionId);
+		answer.setQuestion(thisQ);
+		answerService.create(answer);
+		return "redirect:/questions/" + questionId;
+	}
+	
 	
 	private List<Tag> evaluateTags(String tags, BindingResult result) {
 		if(tags.length()> 0) {
