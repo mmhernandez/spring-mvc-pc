@@ -18,7 +18,6 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name="tags")
@@ -29,7 +28,7 @@ public class Tag {
 	private Long id;
 	
 	@NotBlank(message="At least one tag required")
-	@Size(min=2, max=255, message="Each tag must be between 2 and 255 characters")
+//	@Size(min=2, max=255, message="Each tag must be between 2 and 255 characters")
 	private String subject;
 	
 	@Column(updatable=false)

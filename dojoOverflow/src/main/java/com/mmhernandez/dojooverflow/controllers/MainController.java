@@ -9,9 +9,9 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.mmhernandez.dojooverflow.models.Question;
 import com.mmhernandez.dojooverflow.models.Tag;
@@ -43,50 +43,51 @@ public class MainController {
 		return "newQuestion.jsp";
 	}
 	
+	@GetMapping("/questions/{id}")
+	public String viewQuestion(
+			Model model,
+			@PathVariable("id") Long id) {
+		model.addAttribute("question", questionService.getById(id));
+		return "question.jsp";
+	}
+	
 	
 	@PostMapping("/questions/add")
 	public String addQuestion(
 			@Valid @ModelAttribute("question") Question question,
 			BindingResult result,
 			@RequestParam("tagList") String tags,
-			RedirectAttributes redirectAttributes) {
-		
-		System.out.println("I'm in the addQuestion method");
-		
+			Model model) {
 		//check normal question validation
 		if(result.hasErrors()) {
 			return "newQuestion.jsp";
 		}
 		
-		System.out.println("I've passed initial validations");
-		
 		//add input tags to db appropriately		
-		List<Tag> tagList = evaluateTags(tags);
-		System.out.println("I've set the tagList list variable");
-		System.out.println(tagList);
+		List<Tag> tagList = evaluateTags(tags, result);
 		
 		//check tagsList length
 		if(tagList == null) {
-			redirectAttributes.addFlashAttribute("tagError", "Must include between 1 and 3 tags");
-			result.rejectValue("tagList","","Must include between 1 and 3 tags");
+			model.addAttribute("tagError", "Must include between 1 and 3 tags");
 			return "newQuestion.jsp";
 		}
-			
 		
 		question.setTags(tagList);
 		questionService.create(question);
 		return "redirect:/";
 	}
 	
-	private List<Tag> evaluateTags(String tags) {
-		if(tags.length()> 0 && tags.length()<4) {
-			System.out.println("I'm in the evaluateTags method");
+	private List<Tag> evaluateTags(String tags, BindingResult result) {
+		if(tags.length()> 0) {
 			//create empty arrayList
 			ArrayList<Tag> tagsArrayList = new ArrayList<Tag>();
 			
 			//create string array of tag subjects
 			String[] tagsList = tags.split(",");
-			System.out.println(tagsList);
+			
+			if(tagsList.length > 3) {
+				return null;
+			}
 			
 			//loop through tagsList array
 			for(String eachTag : tagsList) {
@@ -99,6 +100,7 @@ public class MainController {
 				}
 				//append tag to tagsArrayList
 				tagsArrayList.add(tag);
+			
 			}
 			//return arrayList
 			return tagsArrayList;

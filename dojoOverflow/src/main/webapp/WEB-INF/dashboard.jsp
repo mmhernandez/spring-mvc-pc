@@ -22,10 +22,10 @@
 		<tbody>
 			<c:forEach var="question" items="${ questions }">
 				<tr>
-					<td><c:out value="${ question.text }"/></td>
+					<td><a href="/questions/${ question.id }"><c:out value="${ question.text }"/></a></td>
 					<td>
 						<c:forEach var="tag" items="${ question.tags }">
-							<c:out value="${ tag.subject }"/>
+							<c:out value="${ tag.subject }"/><c:if test="${ question.tags.indexOf(tag) < question.tags.size()-1 }" >,</c:if>
 						</c:forEach>
 					</td>
 				</tr>
