@@ -12,14 +12,21 @@
 
 	<h1 class="text-center my-5">Dorms</h1>
 	
-	<nav class="w-50 mx-auto d-flex flex-column gap-2 mb-4">
-		<a href="/dorms/new">+ New Dorm</a>
-		<a href="/students/new">+ New Student</a>
+	<nav class="w-50 mx-auto d-flex justify-content-between align-items-end gap-2 mb-4">
+		<div class="d-flex flex-column gap-2">
+			<a href="/dorms/new">+ New Dorm</a>
+			<a href="/students/new">+ New Student</a>
+			<a href="/classes/new">+ New Class</a>
+		</div>
+		<div class="d-flex flex-column gap-2">
+			<a href="#">All Students</a>
+			<a href="/classes/all">All Classes</a>
+		</div>
 	</nav>
 	
 	<main class="w-50 mx-auto">
-		<table class="table table-striped text-center">
-			<thead class="bg-light">
+		<table class="table table-striped table-hover text-center">
+			<thead class="bg-secondary text-light">
 				<tr>
 					<th>Dorm</th>
 					<th># Students</th>

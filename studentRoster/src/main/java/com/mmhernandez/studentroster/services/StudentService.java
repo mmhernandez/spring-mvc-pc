@@ -1,5 +1,6 @@
 package com.mmhernandez.studentroster.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.mmhernandez.studentroster.models.Dorm;
 import com.mmhernandez.studentroster.models.Student;
+import com.mmhernandez.studentroster.models.Class;
 import com.mmhernandez.studentroster.repositories.StudentRepository;
 
 @Service
@@ -42,6 +44,21 @@ public class StudentService {
 //	count students by dorm
 	public Long countStudentByDorm(Dorm dorm) {
 		return studentRepository.countByDorm(dorm);
+	}
+	
+//	get all not in dorm
+	public List<Student> getAllNotInDorm(Dorm dorm) {
+		return studentRepository.findByDormIsNot(dorm);
+	}
+	
+//	get all in class
+	public List<Student> getAllInClass(Class cls) {
+		return studentRepository.findByClassesEquals(cls);
+	}
+	
+//	get all not in class
+	public List<Student> getAllNotInClass(Class cls) {
+		return studentRepository.findByClassesNotContains(cls);
 	}
 	
 }

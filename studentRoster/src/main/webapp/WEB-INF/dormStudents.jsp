@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <!DOCTYPE html>
 <html>
@@ -19,10 +18,22 @@
 	</nav>
 	
 	<main class="w-50 mx-auto">
-	
+		<form action="/students" method="post" class="bg-dark rounded d-flex justify-content-between align-items-end mb-5">
+			<input type="hidden" name="_method" value="put" />
+			<input type="hidden" name="currentDorm" value="${ dorm.id }" />
+			<div class="w-75 p-3">
+				<label for="student" class="form-label text-light fw-bold fs-5">Add Students</label>
+				<select name="student" class="form-select">
+					<c:forEach var="stu" items="${ availableStudents }">
+						<option value="${ stu.id }"><c:out value="${ stu.firstName } ${ stu.lastName } (${ stu.dorm.name })"/></option>
+					</c:forEach>
+				</select>
+			</div>
+			<input type="submit" class="btn btn-primary h-50 mx-auto mb-3" value="Add" />
+		</form>
 	
 		<table class="table table-striped text-center">
-			<thead class="bg-light">
+			<thead class="bg-secondary text-light">
 				<tr>
 					<th>Student</th>
 					<th>Action</th>
@@ -31,10 +42,12 @@
 			<tbody>
 				<c:forEach var="student" items="${ dorm.students }">
 					<tr>
-						<td><c:out value="${ student.firstName } ${ student.lastName }" /></td>
+						<td>
+							<a href="/students/${ student.id }"><c:out value="${ student.firstName } ${ student.lastName }" /></a>
+						</td>
 						<td class="d-flex gap-2 justify-content-center">
 							<!-- Reassign Button trigger modal -->
-							<button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#reassignModal${ student.id }">
+							<button type="button" class="btn btn-link link-secondary" data-bs-toggle="modal" data-bs-target="#reassignModal${ student.id }">
 								Reassign
 							</button>
 							<!-- Modal for Reassign Button -->
@@ -45,39 +58,37 @@
 								        <h1 class="modal-title fs-5" id="exampleModalLabel">Reassign Dorm</h1>
 								        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 								        </div>
-							        	<form:form action="/students" method="post" modelAttribute="student">
+							        	<form action="/students/reassign" method="post">
 							        		<input type="hidden" name="_method" value="put" />
 									        <div class="modal-body text-start">
 								        		<div class="mb-3">
 													<p>Name: <span class="fw-bold"><c:out value="${ student.firstName } ${ student.lastName }" /></span></p>
-													<form:input type="hidden" path="id" value="${ student.id }" />
-													<form:input type="hidden" path="firstName" value="${ student.firstName }" />
-													<form:input type="hidden" path="lastName" value="${ student.lastName }" />
+													<input type="hidden" name="id" value="${ student.id }" />
 												</div>
 								        		<div class="mb-3">
 													<p>Current Dorm: <span class="fw-bold"><c:out value="${ student.dorm.name }" /></span></p>
 													<input type="hidden" name="currentDorm" value="${ student.dorm.id }" />
 												</div>
 									        	<div class="mb-3">
-													<form:label path="dorm" class="form-label">New Dorm</form:label>
-													<form:select path="dorm" class="form-select">
+													<label for="dorm" class="form-label">New Dorm</label>
+													<select name="dorm" class="form-select">
 														<c:forEach var="eachDorm" items="${ dorms }">
 															<option value="${ eachDorm.id }">${ eachDorm.name }</option>
 														</c:forEach>
-													</form:select>
+													</select>
 												</div>
 								        	</div>
 								        	<div class="modal-footer">
 								        		<button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
 										        <input type="submit" class="btn btn-primary" value="Save"/>
 									        </div>
-							        	</form:form>
+							        	</form>
 							        </div>
 						        </div>
 					        </div>
 					        <form action="/students/${ student.id }" method="post">
 					        	<input type="hidden" name="_method" value="delete" />
-					        	<input type="submit" class="btn btn-outline-danger" value="Remove" />
+					        	<input type="submit" class="btn btn-link link-danger" value="Delete" />
 					        </form>
 						</td>
 					</tr>
