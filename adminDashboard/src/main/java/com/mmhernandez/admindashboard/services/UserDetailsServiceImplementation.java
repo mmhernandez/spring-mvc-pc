@@ -23,28 +23,21 @@ public class UserDetailsServiceImplementation implements UserDetailsService {
 	UserRepository userRepo;
 	
 	
-	// Finds the user by their username. If a user is found, it returns it with the correct authorities. 
+	// Finds the user by email. If a user is found, it returns it with the correct authorities. 
 	@Override
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepo.findByUsername(username);
+	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+		System.out.println("I'm here, in the loadUserByUsername method of the UserDetailsServiceImplementation");
+		Optional<User> user = userRepo.findByEmail(email); 
+		
+		System.out.println(user);
         
         if(user == null) {
-            throw new UsernameNotFoundException("User not found");
+            throw new UsernameNotFoundException("User not found with this email");
         }
         
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), getAuthorities(user));
+        return new org.springframework.security.core.userdetails.User(user.get().getEmail(), user.get().getPassword(), getAuthorities(user.get()));
     }
-	
-	// Find user by email.
-	public UserDetails loadUserByEmail(String email) throws Exception {
-		Optional<User> user = userRepo.findByEmail(email); 
-		if(user == null) {
-			throw new Exception("User not found with this email");
-		}
-		
-		return new org.springframework.security.core.userdetails.User(user.get().getEmail(), user.get().getPassword(), getAuthorities(user.get()));
-		
-	}
+
 	
 	// Returns a list of authorities/permissions for a specific user.
 	private List<GrantedAuthority> getAuthorities(User user) {
