@@ -43,7 +43,7 @@ public class WebSecurityConfig {
             	.and()
         	// Specifies to support form-based authentication. Now, our users are going to be authenticated via a FORM
             .formLogin()
-            	.usernameParameter("email")
+            	.usernameParameter("email")	// ATTEMPTING TO CHANGE LOGIN PARAMETERS TO EMAIL/PW INSTEAD OF USERNAME/PW
                 .permitAll()
                 // Specifies the URL to send users to if login is required
                 .loginPage("/login")

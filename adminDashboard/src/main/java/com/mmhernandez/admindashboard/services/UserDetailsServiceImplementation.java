@@ -35,6 +35,7 @@ public class UserDetailsServiceImplementation implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), getAuthorities(user));
     }
 	
+	// Find user by email.
 	public UserDetails loadUserByEmail(String email) throws Exception {
 		Optional<User> user = userRepo.findByEmail(email); 
 		if(user == null) {

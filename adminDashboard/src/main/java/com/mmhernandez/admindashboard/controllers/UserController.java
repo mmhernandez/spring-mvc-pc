@@ -4,10 +4,16 @@ import java.security.Principal;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 
+import com.mmhernandez.admindashboard.models.User;
 import com.mmhernandez.admindashboard.services.UserService;
 import com.mmhernandez.admindashboard.validators.UserValidator;
+
+import jakarta.validation.Valid;
 
 @Controller
 public class UserController {
@@ -29,14 +35,41 @@ public class UserController {
 			Principal principal,
 			Model model) {
 		String email = principal.getName();
+		System.out.println("email = " + email);
 		model.addAttribute("currentUser", userService.getByEmail(email));
 		return "home.jsp";
 	}
 	
+	
 	// sign up (registration)
 	@GetMapping("/signup")
-	public String signup() {
+	public String signupPage(
+			@ModelAttribute("user") User user) {
+		System.out.println(userService.countUsers());
 		return "signup.jsp";
+	}
+	
+	@PostMapping("/signup")
+	public String signup(
+			@Valid @ModelAttribute("user") User user,
+			BindingResult result) {
+		
+		// validate registration attempt
+		userValidator.validate(user, result);
+		if(userService.getByEmail(user.getEmail()) != null) {
+			result.rejectValue("email", "ExistsCheck");
+		}
+		if(result.hasErrors()) {
+			return "signup.jsp";
+		}
+		
+		// if validation passes...
+		if(userService.countUsers() > 1) {
+			userService.createWithUserRole(user);
+		} else {
+			userService.createWithAdminRole(user);
+		}
+		return "redirect:/";
 	}
 	
 	
@@ -44,8 +77,13 @@ public class UserController {
 	
 	// login
 	@GetMapping("/login")
-	public String login() {
+	public String loginPage() {
 		return "login.jsp";
+	}
+	
+	@PostMapping("/login")
+	public String login() {
+		return "";
 	}
 	
 }

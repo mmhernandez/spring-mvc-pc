@@ -48,5 +48,10 @@ public class UserService {
 		return null;
 	}
 	
+//	count users
+	public Long countUsers() {
+		return userRepo.count();
+	}
+	
 	
 }
