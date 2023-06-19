@@ -1,5 +1,6 @@
 package com.mmhernandez.admindashboard.services;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -46,6 +47,11 @@ public class UserService {
 			return oUser.get();
 		}
 		return null;
+	}
+	
+//	get all
+	public List<User> getAll() {
+		return userRepo.findAll();
 	}
 	
 //	count users

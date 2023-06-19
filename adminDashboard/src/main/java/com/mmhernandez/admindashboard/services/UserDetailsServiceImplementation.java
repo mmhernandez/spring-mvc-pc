@@ -26,10 +26,7 @@ public class UserDetailsServiceImplementation implements UserDetailsService {
 	// Finds the user by email. If a user is found, it returns it with the correct authorities. 
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-		System.out.println("I'm here, in the loadUserByUsername method of the UserDetailsServiceImplementation");
 		Optional<User> user = userRepo.findByEmail(email); 
-		
-		System.out.println(user);
         
         if(user == null) {
             throw new UsernameNotFoundException("User not found with this email");

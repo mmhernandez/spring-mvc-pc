@@ -1,5 +1,6 @@
 package com.mmhernandez.admindashboard.repositories;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.repository.CrudRepository;
@@ -12,5 +13,6 @@ public interface UserRepository extends CrudRepository<User, Long>{
 	
 	Optional<User> findByEmail(String email);
 	User findByUsername(String username);
+	List<User> findAll();
 	
 }

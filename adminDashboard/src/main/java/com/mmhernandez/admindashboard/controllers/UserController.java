@@ -1,6 +1,8 @@
 package com.mmhernandez.admindashboard.controllers;
 
 import java.security.Principal;
+import java.util.Date;
+import java.util.List;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.mmhernandez.admindashboard.models.Role;
 import com.mmhernandez.admindashboard.models.User;
 import com.mmhernandez.admindashboard.services.UserService;
 import com.mmhernandez.admindashboard.validators.UserValidator;
@@ -36,8 +39,21 @@ public class UserController {
 			Principal principal,
 			Model model) {
 		String email = principal.getName();
-		System.out.println("email = " + email);
-		model.addAttribute("currentUser", userService.getByEmail(email));
+		User user = userService.getByEmail(email);
+		model.addAttribute("currentUser", user);
+		
+		if(user != null) {
+			user.setLastLogin(new Date());
+			
+			List<Role> userRoles = user.getRoles();
+			for(Role role : userRoles) {
+				if(role.getName().equals("ROLE_ADMIN") || role.getName().equals("ROLE_SUPERADMIN")) {
+					model.addAttribute("users", userService.getAll());
+					return "adminHome.jsp";
+				} 
+			}
+		}
+
 		return "home.jsp";
 	}
 	
@@ -64,15 +80,16 @@ public class UserController {
 			return "signup.jsp";
 		}
 		
+		System.out.println("user count = " + userService.countUsers());
+		
 		// if validation passes...
-		if(userService.countUsers() > 1) {
+		if(userService.countUsers() >= 1) {
 			userService.createWithUserRole(user);
 		} else {
 			userService.createWithAdminRole(user);
 		}
 		return "redirect:/";
 	}
-	
 	
 	
 	
