@@ -61,10 +61,20 @@ public class UserService {
 		return null;
 	}
 	
+//	get by id
+	public User getById(Long id) {
+		Optional<User> oUser = userRepo.findById(id);
+		if(oUser.isPresent()) {
+			return oUser.get();
+		}
+		return null;
+	}
+	
 //	get all
 	public List<User> getAll() {
 		return userRepo.findAll();
 	}
+
 	
 //	count users
 	public Long countUsers() {

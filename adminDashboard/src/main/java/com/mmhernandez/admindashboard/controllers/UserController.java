@@ -4,6 +4,7 @@ import java.security.Principal;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.mmhernandez.admindashboard.models.Role;
 import com.mmhernandez.admindashboard.models.User;
+import com.mmhernandez.admindashboard.services.RoleService;
 import com.mmhernandez.admindashboard.services.UserService;
 import com.mmhernandez.admindashboard.validators.UserValidator;
 
@@ -26,6 +28,8 @@ import jakarta.validation.Valid;
 @Controller
 public class UserController {
 
+	@Autowired
+	RoleService roleService;
 	private UserService userService;
 	private UserValidator userValidator;
 	
@@ -131,13 +135,41 @@ public class UserController {
 	@GetMapping("/user/delete/{id}")
 	public String deleteUser(
 			@PathVariable("id") Long id,
-			Principal principal,
-			Model model) {
+			Principal principal) {
 		if(principal == null) {
 			return "redirect:/";
 		}
 		userService.deleteById(id);
 		return "redirect:/";
 	}
+	
+	// elevate user to admin 
+	@GetMapping("/user/admin/{id}")
+	public String makeUserAdmin(
+			@PathVariable("id") Long id,
+			Principal principal) {
+		if(principal == null) {
+			return "redirect:/";
+		}
+		User user = userService.getById(id);
+		user.setRoles(roleService.getByName("ROLE_ADMIN"));
+		userService.updateUser(user);
+		return "redirect:/";
+	}
+	
+	// demote to user
+	@GetMapping("/user/user/{id}")
+	public String demoteAdminToUser(
+			Principal principal,
+			@PathVariable("id") Long id) {
+		if(principal == null) {
+			return "redirect:/";
+		}
+		User user = userService.getById(id);
+		user.setRoles(roleService.getByName("ROLE_USER"));
+		userService.updateUser(user);
+		return "redirect:/";
+	}
+
 	
 }
