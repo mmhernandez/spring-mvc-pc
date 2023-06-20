@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -17,6 +18,9 @@ import com.mmhernandez.admindashboard.models.User;
 import com.mmhernandez.admindashboard.services.UserService;
 import com.mmhernandez.admindashboard.validators.UserValidator;
 
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
 @Controller
@@ -37,13 +41,17 @@ public class UserController {
 	@GetMapping(value= {"/", "/home"})
 	public String home(
 			Principal principal,
+			HttpSession session,
 			Model model) {
 		String email = principal.getName();
 		User user = userService.getByEmail(email);
-		model.addAttribute("currentUser", user);
+		session.setAttribute("currentUser", user);
+		model.addAttribute("currentUser", session.getAttribute("currentUser"));
 		
 		if(user != null) {
 			user.setLastLogin(new Date());
+			userService.updateUser(user);
+			
 			
 			List<Role> userRoles = user.getRoles();
 			for(Role role : userRoles) {
@@ -62,14 +70,15 @@ public class UserController {
 	@GetMapping("/signup")
 	public String signupPage(
 			@ModelAttribute("user") User user) {
-		System.out.println(userService.countUsers());
 		return "signup.jsp";
 	}
 	
 	@PostMapping("/signup")
 	public String signup(
 			@Valid @ModelAttribute("user") User user,
-			BindingResult result) {
+			BindingResult result,
+			HttpServletRequest request,
+			HttpSession session) {
 		
 		// validate registration attempt
 		userValidator.validate(user, result);
@@ -80,27 +89,35 @@ public class UserController {
 			return "signup.jsp";
 		}
 		
-		System.out.println("user count = " + userService.countUsers());
-		
 		// if validation passes...
+		String password = user.getPassword();  //store the pw before it gets encrypted
 		if(userService.countUsers() >= 1) {
 			userService.createWithUserRole(user);
 		} else {
-			userService.createWithAdminRole(user);
+			userService.createWithSuperAdminRole(user);
 		}
+		
+		authWithHttpServletRequest(request, user.getEmail(), password);
 		return "redirect:/";
+	}
+	
+	public void authWithHttpServletRequest(HttpServletRequest request, String email, String password) {
+		try {
+			request.login(email, password);
+		} catch (ServletException e) {
+			System.out.println("Error while logging in" + e);
+		}
 	}
 	
 	
 	
-	// login
+	// login (post mapping rolled into spring security functionality)
 	@GetMapping("/login")
 	public String loginPage(
 			@RequestParam(value="error", required=false) String error,
 			@RequestParam(value="logout", required=false) String logout,
 			Model model) {
 		if(error != null) {
-			System.out.println(error);
 			model.addAttribute("errorMessage", "Invalid credentials, please try again");
 		}
 		if(logout != null) {
@@ -109,5 +126,18 @@ public class UserController {
 		return "login.jsp";
 	}
 	
+	
+	// delete user
+	@GetMapping("/user/delete/{id}")
+	public String deleteUser(
+			@PathVariable("id") Long id,
+			Principal principal,
+			Model model) {
+		if(principal == null) {
+			return "redirect:/";
+		}
+		userService.deleteById(id);
+		return "redirect:/";
+	}
 	
 }

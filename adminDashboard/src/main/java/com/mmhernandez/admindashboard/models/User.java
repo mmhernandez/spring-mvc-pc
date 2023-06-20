@@ -42,7 +42,6 @@ public class User {
 	@Size(min=8, max=155)
 	private String password;
 	
-	@NotBlank()
 	@Transient
 	private String confirmPassword;
 	

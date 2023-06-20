@@ -40,6 +40,18 @@ public class UserService {
 		userRepo.save(user);
 	}
 	
+//	create with super admin role
+	public void createWithSuperAdminRole(User user) {
+		user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+		user.setRoles(roleRepo.findByName("ROLE_SUPERADMIN"));
+		userRepo.save(user);
+	}
+	
+//	update user
+	public void updateUser(User user) {
+		userRepo.save(user);
+	}
+	
 //	get by email
 	public User getByEmail(String email) {
 		Optional<User> oUser = userRepo.findByEmail(email);
@@ -57,6 +69,11 @@ public class UserService {
 //	count users
 	public Long countUsers() {
 		return userRepo.count();
+	}
+	
+//	delete user by id
+	public void deleteById(Long id) {
+		userRepo.deleteById(id);
 	}
 	
 	
