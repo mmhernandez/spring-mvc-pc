@@ -35,13 +35,16 @@ public interface CityRepository extends CrudRepository<City, Integer>{
 	
 	
 	@Query(nativeQuery=true, value="""
-			SELECT C.name
-				  ,L.language
-			      ,L.percentage
-			FROM languages L
-			JOIN countries C ON C.code = L.country_code
-			WHERE L.percentage > 89
-			ORDER BY L.percentage DESC
+			SELECT CO.name
+				  ,CI.name 
+			      ,CI.district
+			      ,CI.population
+			FROM countries CO
+			JOIN cities CI ON CI.country_code = CO.code
+			WHERE CO.name = "Argentina"
+				AND CI.district = "Buenos Aires"
+			    AND CI.population > 500000
+			ORDER BY population DESC
 			""")
-	List<Object[]> findProminentLanguagesPerCountry();
+	List<Object[]> findArgentiaCitiesWithLargePopulation();
 }

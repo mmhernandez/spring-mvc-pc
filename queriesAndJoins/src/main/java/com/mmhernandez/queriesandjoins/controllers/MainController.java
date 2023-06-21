@@ -21,6 +21,10 @@ public class MainController {
 		model.addAttribute("query2", mainService.findNumberOfCitiesPerCountry());
 		model.addAttribute("query3", mainService.findMexicoCitiesWithLargePopulation());
 		model.addAttribute("query4", mainService.findProminentLanguagesPerCountry());
+		model.addAttribute("query5", mainService.findDenselyPopulatedCountries());
+		model.addAttribute("query6", mainService.findCountriesWithHighLifeExpentancy());
+		model.addAttribute("query7", mainService.findArgentiaCitiesWithLargePopulation());	
+		model.addAttribute("query8", mainService.findCountryCountByRegion());
 		
 		return "main.jsp";
 	}
