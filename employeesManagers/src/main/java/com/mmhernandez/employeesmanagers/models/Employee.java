@@ -47,7 +47,7 @@ public class Employee {
 	@JoinColumn(name="manager_id")
 	private Employee manager;
 	
-	@OneToMany(mappedBy="employee", fetch=FetchType.LAZY)
+	@OneToMany(mappedBy="manager", fetch=FetchType.LAZY)
 	private List<Employee> employees;
 	
 	
