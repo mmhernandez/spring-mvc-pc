@@ -55,7 +55,7 @@ public class UserController {
 		// No errors! 
         // TO-DO Later: Store their ID from the DB in session, 
         // in other words, log them in.
-		
+		System.out.println(user);
 		return "redirect:/home";
 	}
 	
@@ -78,7 +78,7 @@ public class UserController {
 		// No errors! 
         // TO-DO Later: Store their ID from the DB in session, 
         // in other words, log them in.
-		
+		System.out.println(user);
 		return "redirect:/home";
 	}
 }

@@ -61,7 +61,7 @@
 					</td>
 				</tr>
 				<tr>
-					<th class="w-50 border border-light"><label path="numPets" class="form-label ps-3">Number of Pets</label></th>
+					<th class="w-50 border border-light"><form:label path="numPets" class="form-label ps-3">Number of Pets</form:label></th>
 					<td class="my-3 d-flex flex-column gap-2 w-75 mx-auto">
 						<div class="d-flex gap-1"><form:radiobutton path="numPets" value="0" label="None" class="form-check-input" /></div>
 						<div class="d-flex gap-1"><form:radiobutton path="numPets" value="1" label="One" class="form-check-input" /></div>
