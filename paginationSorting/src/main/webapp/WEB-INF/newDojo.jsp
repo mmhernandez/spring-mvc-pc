@@ -24,6 +24,7 @@
 			<div class="mb-3">
 				<form:label path="name" class="form-label">Name</form:label>
 				<form:input type="text" path="name" class="form-control" />
+				<form:errors path="name" class="text-danger"/>
 			</div>
 			<input type="submit" value="Save" class="btn btn-primary" />
 		</form:form>

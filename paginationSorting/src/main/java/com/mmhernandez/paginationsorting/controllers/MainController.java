@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.mmhernandez.paginationsorting.models.Dojo;
+import com.mmhernandez.paginationsorting.models.Ninja;
 import com.mmhernandez.paginationsorting.services.DojoService;
 import com.mmhernandez.paginationsorting.services.NinjaService;
 
@@ -35,11 +36,11 @@ public class MainController {
 	public String paginated(
 			Model model,
 			@PathVariable("pageNumber") int pageNumber) {
-		Page<Dojo> dojosAndNinjas = dojoService.getAllDojosAndNinjasPageable(pageNumber);
+		Page<Dojo> dojosAndNinjas = dojoService.getAllDojosAndNinjasPageable(pageNumber - 1);
 		int totalPages = dojosAndNinjas.getTotalPages();
 		
 		model.addAttribute("totalPages", totalPages);
-		model.addAttribute("pagedList", dojosAndNinjas);
+		model.addAttribute("pagedList", dojosAndNinjas);		
 		return "index.jsp";
 	}
 	
@@ -65,8 +66,23 @@ public class MainController {
 	
 	@GetMapping("/ninjas/new")
 	public String newNinja(
-			Model model) {
+			Model model,
+			@ModelAttribute("ninja") Ninja ninja) {
 		model.addAttribute("dojos", dojoService.getAll());
 		return "newNinja.jsp";
+	}
+	
+	@PostMapping("/ninjas/new")
+	public String createNinja(
+			@Valid @ModelAttribute("ninja") Ninja ninja,
+			BindingResult result,
+			Model model) {
+		if(result.hasErrors()) {
+			model.addAttribute("dojos", dojoService.getAll());
+			return "newNinja.jsp";
+		}
+		
+		ninjaService.create(ninja);
+		return "redirect:/";
 	}
 }

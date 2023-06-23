@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <!DOCTYPE html>
 <html>
@@ -31,16 +32,16 @@
 			<tbody>
 				<c:forEach var="row" items="${ pagedList.content }">
 					<tr>
-						<td><c:out value="${ row.name }"/></td>
-						<td><c:out value="${ row.firstName } ${ row.lastName }"/></td>
-						<td><c:out value="${ row.createdAt }"/></td>
+						<td><c:out value="${ row[0] }"/></td>
+						<td><c:out value="${ row[1] } ${ row[2] }"/></td>
+						<td><fmt:formatDate type="date" value="${ row[3] }" /></td>
 					</tr>
 				</c:forEach>
 			</tbody>
 		</table>	
-		<div class="d-flex justify-content-end">
-			<c:forEach begin="1" end="${ totalPages }" var="index">
-				<a href="/pages/${ index }">index</a>
+		<div class="d-flex justify-content-end gap-2">
+			<c:forEach begin="1" end="${ totalPages }" var="i">
+				<a href="/pages/${ i }">${ i }</a>
 			</c:forEach>
 		</div>
 	</main>
