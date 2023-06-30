@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.mmhernandez.bookclub.controllers.BookController;
+import com.mmhernandez.bookclub.controllers.UserController;
 import com.mmhernandez.bookclub.models.Book;
+import com.mmhernandez.bookclub.models.User;
 
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
@@ -23,6 +25,9 @@ class BookClubApplicationTests {
 	
 	@Autowired
 	private BookController bookController;
+	
+	@Autowired
+	private UserController userController;
 	
 	private static Validator validator;
 	
@@ -37,6 +42,8 @@ class BookClubApplicationTests {
 	void contextLoads() {
 	}
 	
+	
+//	book model tests	
 	@Test
 	void testBookController() {
 		assertThat(bookController).isNotNull();
@@ -55,5 +62,27 @@ class BookClubApplicationTests {
         }
         assertTrue(violations.isEmpty());
 	}
-
+	
+	
+//	user model tests
+	@Test
+	void testUserController() {
+		assertThat(userController).isNotNull();
+	}
+	
+	@Test
+	void testUser() {
+		User user = new User();
+		user.setName("Melissa");
+		user.setEmail("melissa@email.com");
+		user.setPassword("passwordTest");
+		user.setConfirmPassword("passwordTest");
+		
+		Set<ConstraintViolation<User>> violations = validator.validate(user);
+		for(ConstraintViolation<User> violation : violations) {
+			System.out.println(violation.getMessage());
+		}
+		assertTrue(violations.isEmpty());
+	}
+	
 }
